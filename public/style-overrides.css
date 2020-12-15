@@ -1,0 +1,26 @@
+.round-button, .round-button:focus {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 50%;
+    box-shadow: none;
+    border: none;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    margin: 0
+}
+
+.full-width-dialog {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    max-width: none;
+    max-height: none;
+}
+
+#vrModal .modal-content {
+    border: none
+}

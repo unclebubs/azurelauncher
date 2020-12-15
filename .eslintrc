@@ -1,0 +1,89 @@
+{
+    "parser": "babel-eslint",
+    "plugins": [
+        "react-redux"
+    ],
+    "extends": [
+        "standard",
+        "standard-react",
+        "plugin:react-redux/recommended"
+    ],
+    "rules": {
+        "class-methods-use-this": "off",
+        "no-invalid-this": "off",
+        "no-use-before-define": [
+            "error",
+            {
+                "functions": true,
+                "classes": true,
+                "variables": false
+            }
+        ] // disable the rule for variables, but enable it for functions and classes
+    },
+    "globals": {
+        "localStorage": true,
+        "fetch": true
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.ts",
+                "**/*.tsx"
+            ],
+            "env": {
+                "browser": true,
+                "es6": true,
+                "node": true
+            },
+            "extends": [
+                "eslint:recommended",
+                "plugin:react/recommended",
+                "plugin:@typescript-eslint/eslint-recommended"
+            ],
+            "globals": {
+                "Atomics": "readonly",
+                "SharedArrayBuffer": "readonly"
+            },
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "ecmaFeatures": {
+                    "jsx": true
+                },
+                "ecmaVersion": 2018,
+                "sourceType": "module",
+                "project": "./tsconfig.json"
+            },
+            "plugins": [
+                "react",
+                "@typescript-eslint"
+            ],
+            "rules": {
+                "indent": [
+                    "error",
+                    2,
+                    {
+                        "SwitchCase": 1
+                    }
+                ],
+                "linebreak-style": [
+                    "error",
+                    "unix"
+                ],
+                "quotes": [
+                    "error",
+                    "single"
+                ],
+                "comma-dangle": [
+                    "error",
+                    "always-multiline"
+                ],
+                "@typescript-eslint/no-explicit-any": 0
+            },
+            "settings": {
+                "react": {
+                    "version": "detect"
+                }
+            }
+        }
+    ]
+}
