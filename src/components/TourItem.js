@@ -5,6 +5,7 @@ import { Card } from 'react-bootstrap'
 function TourItem ({ title, image, handleClick }) {
   return (
     <Card
+      as='a'
       style={{ width: '100%' }} onClick={() => {
         handleClick()
       }}

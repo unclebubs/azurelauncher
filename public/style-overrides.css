@@ -1,3 +1,6 @@
+a.card {
+    cursor: pointer;
+}
 .round-button, .round-button:focus {
     flex: 1;
     justify-content: center;
