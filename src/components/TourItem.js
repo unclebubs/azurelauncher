@@ -2,17 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'react-bootstrap'
 
-function TourItem ({ title, image, handleClick }) {
+function TourItem ({ title, image, text, handleClick }) {
   return (
     <Card
       as='a'
-      style={{ width: '100%' }} onClick={() => {
+      style={{ width: '100%' }} onClick={(e) => {
         handleClick()
       }}
     >
       <Card.Img variant='top' src={image} />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
+        {/* {text ? <div dangerouslySetInnerHTML={{ __html: text }} /> : null} */}
       </Card.Body>
     </Card>
   )
@@ -21,7 +22,8 @@ function TourItem ({ title, image, handleClick }) {
 TourItem.propTypes = {
   title: PropTypes.string,
   image: PropTypes.string,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  text: PropTypes.string
 }
 
 export default TourItem
