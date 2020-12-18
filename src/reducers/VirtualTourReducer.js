@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 import {
   FETCH_VIRTUAL_TOUR_LIST_SUCCESS,
+  FETCH_VIRTUAL_TOUR_LIST_ERROR,
   VIRTUAL_TOURS_CHILD_ADDED,
   VIRTUAL_TOURS_CHILD_UPDATED,
   VIRTUAL_TOURS_CHILD_REMOVED
@@ -8,6 +9,7 @@ import {
 
 const INITIAL_STATE = {
   loading: true,
+  loadingError: false,
   plan: null,
   tours: []
 }
@@ -45,17 +47,24 @@ export default (state = INITIAL_STATE, action) => {
         plan: action.payload.plan,
         loading: false
       }
+    case FETCH_VIRTUAL_TOUR_LIST_ERROR:
+      return {
+        ...state,
+        plan: null,
+        loading: false,
+        loadingError: true
+      }
     case VIRTUAL_TOURS_CHILD_ADDED:
       const { addedTour, previousKey } = action.payload
       const newTours = addToArrayInOrder([...state.tours], addedTour, previousKey)
-      return { ...state, tours: newTours }
+      return { ...state, tours: newTours, loading: false, loadingError: false }
     case VIRTUAL_TOURS_CHILD_UPDATED:
       const updatedTours = updateEntityInArray([...state.tours], action.payload.updatedTour, action.payload.previousKey)
-      return { ...state, tours: updatedTours }
+      return { ...state, tours: updatedTours, loading: false, loadingError: false }
     case VIRTUAL_TOURS_CHILD_REMOVED:
       const { id } = action.payload.removedTour
       const removedTours = [...state.tours].filter((tour) => tour.id !== id)
-      return { ...state, tours: removedTours }
+      return { ...state, tours: removedTours, loading: false, loadingError: false }
     default:
       return state
   }

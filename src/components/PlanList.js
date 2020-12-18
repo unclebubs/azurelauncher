@@ -1,35 +1,36 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchVirtualTours } from '../actions'
 import PropTypes from 'prop-types'
-import { Row, Col, Fade } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
+import Fade from 'react-bootstrap/Fade'
 import TourItem from './TourItem'
 import { FaSpinner } from '@react-icons/all-files/fa/FaSpinner'
+import { FaExclamationTriangle } from '@react-icons/all-files/fa/FaExclamationTriangle'
 
-const PlanList = ({ userId, onload, planId, openVR, xs, sm, md, lg, xl }) => {
+const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl }) => {
   const dispatch = useDispatch()
   const tourSelector = (state) => state.tours
   const tours = useSelector(tourSelector)
+  const [loaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    // dispatch(fetchVirtualTours('zaJbATKfpXToPLTjmARndxoUHo63', '-MMV7a5HZ4eyn5SOPbfJ'))
     dispatch(fetchVirtualTours(userId, planId))
-  }, tours)
+  }, [])
 
   const TourListItems = (props) => {
     const { loading } = props
     const virtualTours = tours.tours
     const renderedTourItems = virtualTours.map(tourItem => {
       return (
-        <Col className='mb-4' key={tourItem.key}>
+        <Col className='mb-4 flex align-items-stretch' key={tourItem.id}>
           <TourItem
             title={`${tourItem.name}`}
             image={tourItem.image}
             text={tourItem.description}
             handleClick={(offsetTop) => {
-              console.log('Got the click')
               const url = `https://azure-vr.com/vr/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
-              window.open(url, '_blank', 'fullscreen=yes,location=no,menubar=no')
+              window.open(url, 'tour', 'fullscreen=yes,location=no,menubar=no')
             }}
           />
         </Col>
@@ -48,10 +49,17 @@ const PlanList = ({ userId, onload, planId, openVR, xs, sm, md, lg, xl }) => {
 
   const Loading = (props) => {
     const { loading } = props
+
+    const handleLoaded = () => {
+      setIsLoaded(true)
+    }
+
     return (
-      <Fade in={loading} unmountOnExit>
-        <Row style={{ height: 100 }}>
-          <Col className='d-flex' style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Fade
+        in={loading} unmountOnExit onExited={handleLoaded()}
+      >
+        <Row>
+          <Col className='d-flex spin-container'>
             <h1><FaSpinner className='fa-spin' /></h1>
           </Col>
         </Row>
@@ -63,45 +71,89 @@ const PlanList = ({ userId, onload, planId, openVR, xs, sm, md, lg, xl }) => {
     loading: PropTypes.bool
   }
 
+  const LoadError = ({ container, onload }) => {
+    return (
+      <div className='planContainer' ref={container} onLoad={() => { onload() }}>
+        <Row>
+          <Col className='d-flex' style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <h3 style={{ textAlign: 'center' }}>
+              <FaExclamationTriangle color='red' className='mr-2' />Oops! Something went wrong
+            </h3>
+          </Col>
+        </Row>
+      </div>
+    )
+  }
+
+  LoadError.propTypes = {
+    container: PropTypes.object,
+    onload: PropTypes.func
+  }
+
+  const NoContent = ({ container, onload }) => {
+    return (
+      <div className='planContainer' ref={container} onLoad={() => { onload() }}>
+        <Row>
+          <Col className='d-flex' style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <h3 style={{ textAlign: 'center' }}>
+              <FaExclamationTriangle color='red' className='mr-2' />Oops! No content found
+            </h3>
+          </Col>
+        </Row>
+      </div>
+    )
+  }
+
+  NoContent.propTypes = {
+    container: PropTypes.object,
+    onload: PropTypes.func
+  }
+
   const RenderPlans = (props) => {
-    const { loading, onload } = props
-    const { plan } = tours
+    const { onload } = props
+    const { plan, loading, loadingError } = tours
     const container = useRef(null)
     if (plan) {
       return (
-        <Fade in={!loading}>
-          <div ref={container} key={plan.key} onLoad={() => { onload() }}>
-            <Row className='mx-1'><h1>{plan.name}</h1></Row>
-            <Row xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
+        <Fade in={loaded}>
+          <div className='planContainer' ref={container} key={plan.key} onLoad={() => { onload() }}>
+            <Row className='planDetailsContainer'>
+              <Col>
+                <h1>{plan.name}</h1>
+                {plan.description ? <div dangerouslySetInnerHTML={{ __html: plan.description }} /> : null}
+              </Col>
+            </Row>
+            <Row className='planListContainer' xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
               <TourListItems loading={loading} />
             </Row>
           </div>
         </Fade>
       )
+    } else if (!plan && !loading && !loadingError) {
+      return <NoContent container={container} onload={onload} />
+    } else if (!plan && !loading && loadingError) {
+      return <LoadError container={container} onload={onload} />
     }
-
-    return <h3>No content found</h3>
+    return null
   }
 
   RenderPlans.propTypes = {
-    loading: PropTypes.bool,
     onload: PropTypes.func
   }
 
   const { loading } = tours
 
   return (
-    <div id='qwerty'>
-      <RenderPlans loading={loading} onload={onload} />
+    <>
+      <RenderPlans onload={onload} />
       <Loading loading={loading} />
-    </div>
+    </>
   )
 }
 
 PlanList.propTypes = {
   userId: PropTypes.string,
   planId: PropTypes.string,
-  openVR: PropTypes.func,
   xs: PropTypes.number,
   sm: PropTypes.number,
   md: PropTypes.number,

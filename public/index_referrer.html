@@ -24,44 +24,26 @@
     Vis et hinc novum postulant, has ex adhuc labitur. Et nam erat omittam intellegam, nullam tempor quo ea, cum ea
     facilisis omittantur. Etiam imperdiet id his, pri adhuc blandit ne. Cu lorem sapientem nam, quo amet laboramus
     neglegentur no.</p>
-  <div id='container' style='background-color: red;'>
-    <iframe id="myIframe" referrerpolicy="origin"
-      src='http://192.168.1.91:3000/index.html?userId=zaJbATKfpXToPLTjmARndxoUHo63&planId=-MMV7a5HZ4eyn5SOPbfJ'
-      style='margin: 0; padding: 0; border: none; background-color: inherit; width: 100%;'>
+  <div>
+    <iframe id="myIframe" referrerpolicy="origin" scrolling="no" height='100'
+      src='http://192.168.1.91:3000/index.html?frameId=myIframe&userId=wzaJbATKfpXToPLTjmARndxoUHo63&planId=-MMV7a5HZ4eyn5SOPbfJ'
+      style='overflow:hidden; margin: 0; padding: 0; border: none; background-color: inherit; width: 100%;transition: height 0.2s ease-in-out'>
+    </iframe>
+  </div>
+  <h1>Lorem Ipsim</h1>
+  <div>
+    <iframe id="myIframe2" referrerpolicy="origin" scrolling="no"
+      src='http://192.168.1.91:3000/index.html?frameId=myIframe2&userId=zaJbATKfpXToPLTjmARndxoUHo63&planId=-MMV7a5HZ4eyn5SOPbfJ'
+      style='overflow:hidden; margin: 0; padding: 0; border: none; background-color: inherit; width: 100%;transition: height 0.2s ease-in-out'>
     </iframe>
     <script>
-
-      const sendViewportHeight = () => {
-        const w = window, d = document, e = d.documentElement, g = d.getElementsByTagName('body')[0], x = w.innerWidth || e.clientWidth || g.clientWidth, y = w.innerHeight || e.clientHeight || g.clientHeight;
-        document.getElementById("myIframe").contentWindow.postMessage({
-          viewportHeight: y
-        }, '*')
-      }
-
-      sendViewportHeight()
-
-      window.addEventListener('resize', () => {
-        sendViewportHeight()
-      })
-      window.onorientationchange = sendViewportHeight()
-
       window.onmessage = (e) => {
-        if (e.data.hasOwnProperty("frameHeight")) {
-          document.getElementById("myIframe").style.height = `${e.data.frameHeight}px`;
-        }
-        if (e.data.hasOwnProperty("fullHeight")) {
-          document.getElementById("myIframe").style.height = window.innerHeight;
-        }
-        if (e.data.hasOwnProperty("scrollTo")) {
-          window.scrollTo(0, document.getElementById("container").offsetTop)
-        }
-        if (e.data.hasOwnProperty("requestViewPortHeight")) {
-          sendViewportHeight()
+        if (e.data.frameHeight && e.data.frameId) {
+          document.getElementById(e.data.frameId).style.height = `${e.data.frameHeight}px`;
         }
       };
     </script>
   </div>
-  <h1>Lorem Ipsim</h1>
   <p>Lorem ipsum dolor sit amet, eos maiorum voluptatibus ei, pri ut feugiat albucius. Ad eam quot dolorum hendrerit.
     Vis et hinc novum postulant, has ex adhuc labitur. Et nam erat omittam intellegam, nullam tempor quo ea, cum ea
     facilisis omittantur. Etiam imperdiet id his, pri adhuc blandit ne. Cu lorem sapientem nam, quo amet laboramus

@@ -1,8 +1,15 @@
 body {
     background-color: inherit
 }
-a.card {
+a.tour-item {
     cursor: pointer;
+    height: 100%;
+    width: 100%
+}
+.spin-container {
+    flex: 1;
+    justify-content: center;
+    align-items: center
 }
 .round-button, .round-button:focus {
     flex: 1;

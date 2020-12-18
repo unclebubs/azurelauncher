@@ -2,6 +2,7 @@
 /* eslint-disable import/no-unresolved */
 import {
   FETCH_VIRTUAL_TOUR_LIST_SUCCESS,
+  FETCH_VIRTUAL_TOUR_LIST_ERROR,
   VIRTUAL_TOURS_CHILD_ADDED,
   VIRTUAL_TOURS_CHILD_UPDATED,
   VIRTUAL_TOURS_CHILD_REMOVED
@@ -26,7 +27,10 @@ export const fetchVirtualTours = (userId, planId) => async dispatch => {
       }
     })
   } catch (error) {
-    console.log('Got an error')
+    console.log('Got an error', error)
+    return dispatch({
+      type: FETCH_VIRTUAL_TOUR_LIST_ERROR
+    })
   }
 }
 

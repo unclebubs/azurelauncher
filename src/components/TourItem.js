@@ -5,15 +5,16 @@ import { Card } from 'react-bootstrap'
 function TourItem ({ title, image, text, handleClick }) {
   return (
     <Card
+      className='tour-item'
       as='a'
-      style={{ width: '100%' }} onClick={(e) => {
+      onClick={(e) => {
         handleClick()
       }}
     >
       <Card.Img variant='top' src={image} />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
-        {/* {text ? <div dangerouslySetInnerHTML={{ __html: text }} /> : null} */}
+        {text ? <div dangerouslySetInnerHTML={{ __html: text }} /> : null}
       </Card.Body>
     </Card>
   )
