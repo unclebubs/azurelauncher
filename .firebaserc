@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "virtualtour-e847f"
+  },
+  "targets": {
+    "virtualtour-e847f": {
+      "hosting": {
+        "launcher": [
+          "launcher-virtualtour-e847f"
+        ]
+      }
+    }
   }
 }
