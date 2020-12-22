@@ -29,7 +29,7 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl }) => {
             image={tourItem.image}
             text={tourItem.description}
             handleClick={(offsetTop) => {
-              const url = `https://azure-vr.com/vr/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
+              const url = `https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
               window.open(url, 'tour', 'fullscreen=yes,location=no,menubar=no')
             }}
           />
