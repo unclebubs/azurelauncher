@@ -8,14 +8,14 @@ import TourItem from './TourItem'
 import { FaSpinner } from '@react-icons/all-files/fa/FaSpinner'
 import { FaExclamationTriangle } from '@react-icons/all-files/fa/FaExclamationTriangle'
 
-const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl }) => {
+const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
   const dispatch = useDispatch()
   const tourSelector = (state) => state.tours
   const tours = useSelector(tourSelector)
   const [loaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    dispatch(fetchVirtualTours(userId, planId))
+    dispatch(fetchVirtualTours(userId, planId, preview))
   }, [])
 
   const TourListItems = (props) => {
@@ -29,7 +29,8 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl }) => {
             image={tourItem.image}
             text={tourItem.description}
             handleClick={(offsetTop) => {
-              const url = `https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
+              let url = `https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
+              url += preview ? '&preview=true' : ''
               window.open(url, 'tour', 'fullscreen=yes,location=no,menubar=no')
             }}
           />
@@ -56,7 +57,7 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl }) => {
 
     return (
       <Fade
-        in={loading} unmountOnExit onExited={handleLoaded()}
+        in={loading} unmountOnExit onExited={handleLoaded}
       >
         <Row>
           <Col className='d-flex spin-container'>
@@ -160,7 +161,8 @@ PlanList.propTypes = {
   lg: PropTypes.number,
   xl: PropTypes.number,
   loading: PropTypes.bool,
-  onload: PropTypes.func
+  onload: PropTypes.func,
+  preview: PropTypes.bool
 }
 
 PlanList.defaultProps = {
@@ -168,7 +170,8 @@ PlanList.defaultProps = {
   sm: 3,
   md: 4,
   lg: 5,
-  xl: 6
+  xl: 6,
+  preview: false
 }
 
 export default PlanList

@@ -12,10 +12,10 @@ import {
 import tourDAO from '../dao/TourDAO'
 import planDao from '../dao/PlanDAO'
 
-export const fetchVirtualTours = (userId, planId) => async dispatch => {
+export const fetchVirtualTours = (userId, planId, preview = false) => async dispatch => {
   try {
-    const plan = await planDao.loadPlan(userId, planId)
-    await tourDAO.loadTours(userId, planId, dispatch, dispatchEntitiesLoaded, dispatchEntityAdded, dispatchEntityUpdated, dispatchEntityRemoved)
+    const plan = await planDao.loadPlan(userId, planId, preview)
+    await tourDAO.loadTours(userId, planId, dispatch, dispatchEntitiesLoaded, dispatchEntityAdded, dispatchEntityUpdated, dispatchEntityRemoved, preview)
     return dispatch({
       type: FETCH_VIRTUAL_TOUR_LIST_SUCCESS,
       payload: {

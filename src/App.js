@@ -18,8 +18,6 @@ function App () {
   const frameId = getFrameId()
 
   useEffect(() => {
-    const frame = window
-    console.log('framed element is ', frame)
     const clientOverrides = document.getElementById('clientOverrides')
     const referrer = document.referrer
     if (!clientOverrides && referrer) {
@@ -52,6 +50,8 @@ function App () {
 
     params.userId = urlParams.get('userId')
     params.planId = urlParams.get('planId')
+
+    params.preview = !!urlParams.get('preview')
 
     return params
   }

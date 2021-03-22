@@ -13,9 +13,9 @@ const REF_PREFIX = 'plans'
 
 class PlanDAO extends FirebaseDAO {
   // eslint-disable-next-line no-async-promise-executor
-  loadPlan = async (uId: string, planId: string) : Promise<Plan> => new Promise(async (resolve, reject) => {
+  loadPlan = async (uId: string, planId: string, preview: boolean = false) : Promise<Plan> => new Promise(async (resolve, reject) => {
     try {
-      const ref = await this.buildRef(uId, planId)
+      const ref = await this.buildRef(uId, planId, preview)
       const planData = await this.loadEntity({ ref })
       if (planData) {
         const { id, userId, name, description, subscriptionId, order, image } = planData
@@ -28,9 +28,9 @@ class PlanDAO extends FirebaseDAO {
     }
   })
 
-  buildRef = async (userId: string, planId: string) : Promise<string> => new Promise(async (resolve, reject) => {
+  buildRef = async (userId: string, planId: string, preview: boolean = false) : Promise<string> => new Promise(async (resolve, reject) => {
     try {
-      const ref = `${REF_PREFIX}/${userId}/published/${planId || ''}`
+      const ref = `${REF_PREFIX}/${userId}/${preview ? 'pending' : 'published'}/${planId || ''}`
       resolve(ref)
     } catch (error) {
       reject(error)
