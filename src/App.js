@@ -7,6 +7,7 @@ import store from './store/Store'
 import PlanList from './components/PlanList'
 import './App.css'
 import { IoIosCloseCircleOutline } from '@react-icons/all-files/io/IoIosCloseCircleOutline'
+import DynamicPortal from './portal/DynamicPortal'
 
 function App () {
   const containerRef = useRef()
@@ -14,18 +15,17 @@ function App () {
   const frame = useRef()
   const [tourListActive, setTourListActive] = useState(true)
   const [vrActive, setVRActive] = useState(false)
-  const [vrActiveShowButton, setVrActiveShowButton] = useState(false)
   const [userId, setUserId] = useState()
   const [planId, setPlanId] = useState()
   const [tourId, setTourId] = useState()
 
   useEffect(() => {
     if (vrActive) {
-      document.documentElement.style.overflow = 'hidden'
-      document.body.scroll = 'no'
+      window.top.document.documentElement.style.overflow = 'hidden'
+      window.top.document.body.scroll = 'no'
     } else {
-      document.documentElement.style.overflow = 'scroll'
-      document.body.scroll = 'yes'
+      window.top.document.documentElement.style.overflow = 'scroll'
+      window.top.document.body.scroll = 'yes'
     }
   }
   , [vrActive])
@@ -43,7 +43,6 @@ function App () {
 
       head.appendChild(link)
     }
-    // updateFrameHeight()
   })
 
   const params = () => {
@@ -88,68 +87,80 @@ function App () {
     setPlanId(planId)
     setTourId(tourId)
     setTourListActive(false)
-  }
-  const handleTourListExited = () => {
     setVRActive(true)
-    setTimeout(() => {
-      setVrActiveShowButton(true)
-    }, 2000)
-  }
-
-  const handleVRExited = () => {
-    setTourListActive(true)
   }
 
   return (
     <Provider store={store}>
       <Container ref={containerRef} fluid key='container'>
-        <Fade in={tourListActive} mountOnEnter onExited={handleTourListExited}>
+        <Fade in={tourListActive} mountOnEnter>
           <PlanList {...params()} handlePlanClick={handlePlanClick} />
         </Fade>
-        <Fade in={vrActive} unmountOnExit mountOnEnter onExited={handleVRExited}>
-          <div className='vh-100 w-100' ref={frameContainer} style={styles.frameContainerStyles}>
-            <div
-              className='d-flex justify-content-center align-items-center' style={styles.buttonContainer}
-            >
-              <Fade in={vrActiveShowButton}>
-                <button
-                  style={styles.button}
-                  onClick={() => {
-                    setVRActive(false)
-                    setVrActiveShowButton(false)
-                  }}
-                  onTouchEnd={() => {
-                    setVRActive(false)
-                    setVrActiveShowButton(false)
-                  }}
-                >
-                  <IoIosCloseCircleOutline color='rgba(255, 255, 255)' size={36} />
-                </button>
-              </Fade>
+        <DynamicPortal style='position: fixed; top: 0px; left: 0px;' container={window.top.document.body} containerId='vrPortal'>
+          <div ref={frameContainer} style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
+            <div style={styles.buttonContainer}>
+              <button
+                style={styles.button}
+                onClick={() => {
+                  setVRActive(false)
+                  setTourListActive(true)
+                }}
+                onTouchEnd={() => {
+                  setVRActive(false)
+                  setTourListActive(true)
+                }}
+              >
+                <IoIosCloseCircleOutline color='rgba(255, 255, 255)' size={36} />
+              </button>
             </div>
             <iframe
               ref={frame}
-              className='vh-100 w-100'
               src={`https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourId}`}
               style={styles.frame}
               id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
             />
-
           </div>
-        </Fade>
-
+        </DynamicPortal>
       </Container>
     </Provider>
   )
 }
 
 const styles = {
-  frameContainerStyles: { position: 'fixed', top: 0, left: 0 },
+  frameContainerStylesOn: {
+    height: '100vh',
+    width: '100%',
+    opacity: 1,
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'opacity 0.3s ease-in'
+  },
+  frameContainerStylesOff: {
+    height: 0,
+    width: 0,
+    opacity: 0,
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all  0.3s ease-out'
+
+  },
+
   buttonContainer: {
-    position: 'relative',
+    position: 'absolute',
     top: '15px',
     right: '20px',
-    float: 'right'
+    float: 'right',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   button: {
     height: '40px',
@@ -167,7 +178,9 @@ const styles = {
     margin: 0,
     padding: 0,
     border: 'none',
-    backgroundColor: 'inherit'
+    backgroundColor: 'inherit',
+    width: '100%',
+    height: '100vh'
   }
 }
 
