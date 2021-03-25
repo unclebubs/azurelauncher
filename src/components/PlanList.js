@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchVirtualTours } from '../actions'
 import PropTypes from 'prop-types'
@@ -8,30 +8,28 @@ import TourItem from './TourItem'
 import { FaSpinner } from '@react-icons/all-files/fa/FaSpinner'
 import { FaExclamationTriangle } from '@react-icons/all-files/fa/FaExclamationTriangle'
 
-const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
+const PlanList = ({ userId, onload, handlePlanClick, planId, tourId, xs, sm, md, lg, xl, preview }) => {
   const dispatch = useDispatch()
   const tourSelector = (state) => state.tours
   const tours = useSelector(tourSelector)
-  const [loaded, setIsLoaded] = useState(false)
+  // const [loaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    dispatch(fetchVirtualTours(userId, planId, preview))
+    dispatch(fetchVirtualTours(userId, planId, tourId, preview))
   }, [])
 
   const TourListItems = (props) => {
-    const { loading } = props
+    const { loading, handlePlanClick } = props
     const virtualTours = tours.tours
     const renderedTourItems = virtualTours.map(tourItem => {
       return (
-        <Col className='mb-4 flex align-items-stretch' key={tourItem.id}>
+        <Col className='mb-4 flex align-items-stretch' key={tourItem.id} xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
           <TourItem
             title={`${tourItem.name}`}
             image={tourItem.image}
             text={tourItem.description}
             handleClick={(offsetTop) => {
-              let url = `https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourItem.id}`
-              url += preview ? '&preview=true' : ''
-              window.open(url, 'tour', 'fullscreen=yes,location=no,menubar=no')
+              handlePlanClick({ userId, planId, tourId: tourItem.id })
             }}
           />
         </Col>
@@ -52,7 +50,7 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
     const { loading } = props
 
     const handleLoaded = () => {
-      setIsLoaded(true)
+      // setIsLoaded(true)
     }
 
     return (
@@ -111,21 +109,21 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
   }
 
   const RenderPlans = (props) => {
-    const { onload } = props
+    const { onload, handlePlanClick } = props
     const { plan, loading, loadingError } = tours
     const container = useRef(null)
     if (plan) {
       return (
-        <Fade in={loaded}>
-          <div className='planContainer' ref={container} key={plan.key} onLoad={() => { onload() }}>
+        <Fade in={!loading}>
+          <div className='planContainer' ref={container} key={plan.key}>
             <Row className='planDetailsContainer'>
               <Col>
                 <h1>{plan.name}</h1>
                 {plan.description ? <div dangerouslySetInnerHTML={{ __html: plan.description }} /> : null}
               </Col>
             </Row>
-            <Row className='planListContainer' xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
-              <TourListItems loading={loading} />
+            <Row className='planListContainer'>
+              <TourListItems loading={loading} handlePlanClick={handlePlanClick} />
             </Row>
           </div>
         </Fade>
@@ -139,14 +137,15 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
   }
 
   RenderPlans.propTypes = {
-    onload: PropTypes.func
+    onload: PropTypes.func,
+    handlePlanClick: PropTypes.func
   }
 
   const { loading } = tours
 
   return (
     <>
-      <RenderPlans onload={onload} />
+      <RenderPlans onload={onload} handlePlanClick={handlePlanClick} />
       <Loading loading={loading} />
     </>
   )
@@ -155,6 +154,7 @@ const PlanList = ({ userId, onload, planId, xs, sm, md, lg, xl, preview }) => {
 PlanList.propTypes = {
   userId: PropTypes.string,
   planId: PropTypes.string,
+  tourId: PropTypes.string,
   xs: PropTypes.number,
   sm: PropTypes.number,
   md: PropTypes.number,
@@ -162,15 +162,16 @@ PlanList.propTypes = {
   xl: PropTypes.number,
   loading: PropTypes.bool,
   onload: PropTypes.func,
-  preview: PropTypes.bool
+  preview: PropTypes.bool,
+  handlePlanClick: PropTypes.func
 }
 
 PlanList.defaultProps = {
-  xs: 1,
-  sm: 3,
-  md: 4,
-  lg: 5,
-  xl: 6,
+  xs: 12,
+  sm: 12,
+  md: 12,
+  lg: 6,
+  xl: 12,
   preview: false
 }
 

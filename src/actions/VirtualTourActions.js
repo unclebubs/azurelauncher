@@ -5,27 +5,44 @@ import {
   FETCH_VIRTUAL_TOUR_LIST_ERROR,
   VIRTUAL_TOURS_CHILD_ADDED,
   VIRTUAL_TOURS_CHILD_UPDATED,
-  VIRTUAL_TOURS_CHILD_REMOVED
+  VIRTUAL_TOURS_CHILD_REMOVED,
+  FETCH_SINGLE_TOUR_LIST_SUCCESS
 
 } from './types'
 // import VirtualTourScene from '../scenes/VirtualTourSceneConnector'
 import tourDAO from '../dao/TourDAO'
 import planDao from '../dao/PlanDAO'
 
-export const fetchVirtualTours = (userId, planId, preview = false) => async dispatch => {
+export const fetchVirtualTours = (userId, planId, tourId, preview = false) => async dispatch => {
   try {
+    console.log('the tour id is ', tourId)
     const plan = await planDao.loadPlan(userId, planId, preview)
-    await tourDAO.loadTours(userId, planId, dispatch, dispatchEntitiesLoaded, dispatchEntityAdded, dispatchEntityUpdated, dispatchEntityRemoved, preview)
-    return dispatch({
-      type: FETCH_VIRTUAL_TOUR_LIST_SUCCESS,
-      payload: {
-        virtualTours: [],
-        plan,
-        loadError: false,
-        userId,
-        planId
-      }
-    })
+    if (tourId) {
+      const tour = await tourDAO.loadTour(userId, planId, tourId, false)
+      return dispatch({
+        type: FETCH_SINGLE_TOUR_LIST_SUCCESS,
+        payload: {
+          virtualTours: [tour],
+          plan,
+          loadError: false,
+          userId,
+          planId
+        }
+      })
+    } else {
+      await tourDAO.loadTours(userId, planId, dispatch, dispatchEntitiesLoaded, dispatchEntityAdded, dispatchEntityUpdated, dispatchEntityRemoved, preview)
+
+      return dispatch({
+        type: FETCH_VIRTUAL_TOUR_LIST_SUCCESS,
+        payload: {
+          virtualTours: [],
+          plan,
+          loadError: false,
+          userId,
+          planId
+        }
+      })
+    }
   } catch (error) {
     console.log('Got an error', error)
     return dispatch({

@@ -4,7 +4,8 @@ import {
   FETCH_VIRTUAL_TOUR_LIST_ERROR,
   VIRTUAL_TOURS_CHILD_ADDED,
   VIRTUAL_TOURS_CHILD_UPDATED,
-  VIRTUAL_TOURS_CHILD_REMOVED
+  VIRTUAL_TOURS_CHILD_REMOVED,
+  FETCH_SINGLE_TOUR_LIST_SUCCESS
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -41,6 +42,13 @@ const updateEntityInArray = (entityArray, entity, previousKey) => {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case FETCH_SINGLE_TOUR_LIST_SUCCESS:
+      return {
+        ...state,
+        plan: action.payload.plan,
+        loading: false,
+        tours: action.payload.virtualTours
+      }
     case FETCH_VIRTUAL_TOUR_LIST_SUCCESS:
       return {
         ...state,
