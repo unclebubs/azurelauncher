@@ -3,8 +3,22 @@ import PropTypes from 'prop-types'
 import { Card, Fade } from 'react-bootstrap'
 import { FaPlay } from '@react-icons/all-files/fa/FaPlay'
 
-function TourItem ({ title, image, text, handleClick }) {
+function TourItem ({ title, image, text, handleClick, showTourTitle, showTourDescription }) {
   const [isHovering, setIsHovering] = useState(false)
+
+  const renderTourDetails = () => {
+    if ((showTourTitle && title) || (showTourDescription && text)) {
+      return (
+        <Card.Body>
+          {showTourTitle && title ? <Card.Title>{title}</Card.Title> : null}
+          {showTourDescription && text ? <div dangerouslySetInnerHTML={{ __html: text }} /> : null}
+        </Card.Body>
+      )
+    }
+
+    return null
+  }
+
   return (
     <Card
       onMouseEnter={(event) => { setIsHovering(true) }}
@@ -23,10 +37,7 @@ function TourItem ({ title, image, text, handleClick }) {
           </Card.ImgOverlay>
         </Fade>
       </div>
-      <Card.Body>
-        <Card.Title>{title}</Card.Title>
-        {text ? <div dangerouslySetInnerHTML={{ __html: text }} /> : null}
-      </Card.Body>
+      {renderTourDetails()}
 
     </Card>
   )
@@ -36,7 +47,9 @@ TourItem.propTypes = {
   title: PropTypes.string,
   image: PropTypes.string,
   handleClick: PropTypes.func,
-  text: PropTypes.string
+  text: PropTypes.string,
+  showTourTitle: PropTypes.bool,
+  showTourDescription: PropTypes.bool
 }
 
 const styles = {
