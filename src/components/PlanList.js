@@ -8,7 +8,23 @@ import TourItem from './TourItem'
 import { FaSpinner } from '@react-icons/all-files/fa/FaSpinner'
 import { FaExclamationTriangle } from '@react-icons/all-files/fa/FaExclamationTriangle'
 
-const PlanList = ({ userId, onload, handlePlanClick, planId, tourId, xs, sm, md, lg, xl, preview }) => {
+const PlanList = ({
+  userId,
+  showPlanTitle,
+  showTourTitle,
+  showTourDescription,
+  showPlanDescription,
+  onload,
+  handlePlanClick,
+  planId,
+  tourId,
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
+  preview
+}) => {
   const dispatch = useDispatch()
   const tourSelector = (state) => state.tours
   const tours = useSelector(tourSelector)
@@ -31,6 +47,8 @@ const PlanList = ({ userId, onload, handlePlanClick, planId, tourId, xs, sm, md,
             handleClick={(offsetTop) => {
               handlePlanClick({ userId, planId, tourId: tourItem.id })
             }}
+            showTourTitle={showTourTitle}
+            showTourDescription={showTourDescription}
           />
         </Col>
       )
@@ -112,16 +130,25 @@ const PlanList = ({ userId, onload, handlePlanClick, planId, tourId, xs, sm, md,
     const { onload, handlePlanClick } = props
     const { plan, loading, loadingError } = tours
     const container = useRef(null)
+
+    const renderPlanDetails = () => {
+      if ((showPlanTitle && plan.name) || (showPlanDescription && plan.description)) {
+        return (
+          <Row className='planDetailsContainer'>
+            <Col>
+              {showPlanTitle && plan.name ? <h1>{plan.name}</h1> : null}
+              {showPlanDescription && plan.description ? <div dangerouslySetInnerHTML={{ __html: plan.description }} /> : null}
+            </Col>
+          </Row>
+        )
+      }
+      return null
+    }
     if (plan) {
       return (
         <Fade in={!loading}>
           <div className='planContainer' ref={container} key={plan.key}>
-            <Row className='planDetailsContainer'>
-              <Col>
-                <h1>{plan.name}</h1>
-                {plan.description ? <div dangerouslySetInnerHTML={{ __html: plan.description }} /> : null}
-              </Col>
-            </Row>
+            {renderPlanDetails()}
             <Row className='planListContainer'>
               <TourListItems loading={loading} handlePlanClick={handlePlanClick} />
             </Row>
@@ -145,7 +172,14 @@ const PlanList = ({ userId, onload, handlePlanClick, planId, tourId, xs, sm, md,
 
   return (
     <>
-      <RenderPlans onload={onload} handlePlanClick={handlePlanClick} />
+      <RenderPlans
+        onload={onload}
+        handlePlanClick={handlePlanClick}
+        showPlanTitle={showPlanTitle}
+        showTourTitle={showTourTitle}
+        showTourDescription={showTourDescription}
+        showPlanDescription={showPlanDescription}
+      />
       <Loading loading={loading} />
     </>
   )
@@ -163,7 +197,11 @@ PlanList.propTypes = {
   loading: PropTypes.bool,
   onload: PropTypes.func,
   preview: PropTypes.bool,
-  handlePlanClick: PropTypes.func
+  handlePlanClick: PropTypes.func,
+  showPlanTitle: PropTypes.bool,
+  showTourTitle: PropTypes.bool,
+  showTourDescription: PropTypes.bool,
+  showPlanDescription: PropTypes.bool
 }
 
 PlanList.defaultProps = {

@@ -64,8 +64,12 @@ function App () {
     params.userId = urlParams.get('userId')
     params.planId = urlParams.get('planId')
     params.tourId = urlParams.get('tourId')
+    params.showPlanTitle = urlParams.get('showPlanTitle') === 'true'
+    params.showPlanDescription = urlParams.get('showPlanDescription') === 'true'
+    params.showTourTitle = urlParams.get('showTourTitle') === 'true'
+    params.showTourDescription = urlParams.get('showTourDescription') === 'true'
 
-    params.preview = !!urlParams.get('preview')
+    params.preview = urlParams.get('preview') === 'true'
 
     return params
   }
