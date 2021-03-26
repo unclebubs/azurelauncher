@@ -33,7 +33,7 @@ function TourItem ({ title, image, text, handleClick, showTourTitle, showTourDes
         <Card.Img variant='top' src={image} />
         <Fade in={isHovering}>
           <Card.ImgOverlay style={styles.tourItemOverlay} className='d-flex align-items-center justify-content-center'>
-            <FaPlay color='white' size='40' />
+            <FaPlay color='white' size='20%' />
           </Card.ImgOverlay>
         </Fade>
       </div>
