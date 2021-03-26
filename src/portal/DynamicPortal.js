@@ -7,8 +7,8 @@ class DynamicPortal extends Component {
     super(props)
     const { container, containerClass = '', containerId, style } = this.props
     this.portal = document.createElement('div')
-    this.portal.setAttribute('class', containerClass)
-    this.portal.setAttribute('style', style)
+    containerClass && this.portal.setAttribute('class', containerClass)
+    style && this.portal.setAttribute('style', style)
     if (containerId) {
       this.portal.id = containerId
     }

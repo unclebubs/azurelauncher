@@ -8,10 +8,10 @@ import store from './store/Store'
 import PlanList from './components/PlanList'
 import './App.css'
 import { IoIosCloseCircleOutline } from '@react-icons/all-files/io/IoIosCloseCircleOutline'
+import DynamicPortal from './portal/DynamicPortal'
 
 function App ({ appContainer }) {
   const containerRef = useRef()
-  const frameContainer = useRef()
   const frame = useRef()
   const [tourListActive, setTourListActive] = useState(true)
   const [vrActive, setVRActive] = useState(false)
@@ -100,31 +100,33 @@ function App ({ appContainer }) {
         <Fade in={tourListActive} mountOnEnter>
           <PlanList {...params()} handlePlanClick={handlePlanClick} />
         </Fade>
-        <div ref={frameContainer} style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
-          <div style={vrButtonActive ? styles.buttonContainerOn : styles.buttonContainerOff}>
-            <button
-              style={styles.button}
-              onClick={() => {
-                setVRActive(false)
-                setVRButtonActive(false)
-                setTourListActive(true)
-              }}
-              onTouchEnd={() => {
-                setVRActive(false)
-                setVRButtonActive(false)
-                setTourListActive(true)
-              }}
-            >
-              <IoIosCloseCircleOutline color='rgba(255, 255, 255)' size={36} />
-            </button>
+        <DynamicPortal container={window.document.body} containerId='portal'>
+          <div style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
+            <div style={vrButtonActive ? styles.buttonContainerOn : styles.buttonContainerOff}>
+              <button
+                style={styles.button}
+                onClick={() => {
+                  setVRActive(false)
+                  setVRButtonActive(false)
+                  setTourListActive(true)
+                }}
+                onTouchEnd={() => {
+                  setVRActive(false)
+                  setVRButtonActive(false)
+                  setTourListActive(true)
+                }}
+              >
+                <IoIosCloseCircleOutline color='rgba(255, 255, 255)' size={36} />
+              </button>
+            </div>
+            <iframe
+              ref={frame}
+              src={`https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourId}`}
+              style={styles.frame}
+              id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
+            />
           </div>
-          <iframe
-            ref={frame}
-            src={`https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourId}`}
-            style={styles.frame}
-            id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
-          />
-        </div>
+        </DynamicPortal>
       </Container>
     </Provider>
   )
@@ -146,7 +148,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.3s ease-in',
-    zIndex: '99999999999'
+    zIndex: '999999'
   },
   frameContainerStylesOff: {
     height: 0,
@@ -156,11 +158,10 @@ const styles = {
     top: 0,
     left: 0,
     display: 'flex',
-    alignItems: 'center',
+    alignitems: 'center',
     justifyContent: 'center',
     transition: 'all  0.3s ease-out',
-    zIndex: '99999999999'
-
+    zIndex: '999999'
   },
 
   buttonContainerOn: {
@@ -191,7 +192,7 @@ const styles = {
     borderRadius: '40px',
     border: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    zIndex: '999999',
+    zIndex: '9999999',
     padding: 0
   },
   frame: {

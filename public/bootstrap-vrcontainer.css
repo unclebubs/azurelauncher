@@ -6701,6 +6701,7 @@
 }
 .vrTourContainer .fade {
   transition: opacity 0.15s linear;
+  opacity: 1
 }
 @media (prefers-reduced-motion: reduce) {
   .vrTourContainer .fade {
