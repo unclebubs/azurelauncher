@@ -173,7 +173,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'opacity 0.2s ease-in 1s'
+    transition: 'opacity 0.2s ease-in 1s',
+    zIndex: 1
   },
   buttonContainerOff: {
     position: 'absolute',
