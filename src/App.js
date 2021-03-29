@@ -148,7 +148,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.3s ease-in',
-    zIndex: '999999'
+    zIndex: '999999',
+    backgroundColor: 'black'
   },
   frameContainerStylesOff: {
     height: 0,
@@ -161,7 +162,8 @@ const styles = {
     alignitems: 'center',
     justifyContent: 'center',
     transition: 'all  0.3s ease-out',
-    zIndex: '999999'
+    zIndex: '999999',
+    backgroundColor: 'black'
   },
 
   buttonContainerOn: {

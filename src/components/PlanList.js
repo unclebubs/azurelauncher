@@ -76,7 +76,7 @@ const PlanList = ({
         in={loading} unmountOnExit onExited={handleLoaded}
       >
         <Row>
-          <Col className='d-flex spin-container'>
+          <Col className='d-flex spin-container mt-3'>
             <h1><FaSpinner className='fa-spin' /></h1>
           </Col>
         </Row>
