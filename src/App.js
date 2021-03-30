@@ -104,7 +104,7 @@ function App ({ appContainer }) {
     setUserId(userId)
     setPlanId(planId)
     setTourId(tourId)
-    // setSceneId(sceneId)
+    setSceneId(sceneId)
     setTourListActive(false)
     setVRActive(true)
     setVRButtonActive(true)
