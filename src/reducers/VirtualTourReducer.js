@@ -5,14 +5,22 @@ import {
   VIRTUAL_TOURS_CHILD_ADDED,
   VIRTUAL_TOURS_CHILD_UPDATED,
   VIRTUAL_TOURS_CHILD_REMOVED,
-  FETCH_SINGLE_TOUR_LIST_SUCCESS
+  FETCH_SINGLE_TOUR_LIST_SUCCESS,
+  FETCH_SCENE_LIST_SUCCESS,
+  FETCH_SCENE_LIST_ERROR,
+  SCENE_CHILD_ADDED,
+  SCENE_CHILD_UPDATED,
+  SCENE_CHILD_REMOVED
 } from '../actions/types'
+import Tour from '../model/Tour'
 
 const INITIAL_STATE = {
   loading: true,
   loadingError: false,
   plan: null,
-  tours: []
+  tours: [],
+  tour: new Tour(),
+  scenes: []
 }
 
 const addToArrayInOrder = (entityArray, entity, previousKey) => {
@@ -73,6 +81,30 @@ export default (state = INITIAL_STATE, action) => {
       const { id } = action.payload.removedTour
       const removedTours = [...state.tours].filter((tour) => tour.id !== id)
       return { ...state, tours: removedTours, loading: false, loadingError: false }
+    case FETCH_SCENE_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        tour: action.payload.tour
+      }
+    case FETCH_SCENE_LIST_ERROR:
+      return {
+        ...state,
+        scenes: [],
+        loading: false,
+        loadingError: true
+      }
+    case SCENE_CHILD_ADDED:
+      const { addedScene, previousSceneKey } = action.payload
+      const newScenes = addToArrayInOrder([...state.scenes], addedScene, previousSceneKey)
+      return { ...state, scenes: newScenes, loading: false, loadingError: false }
+    case SCENE_CHILD_UPDATED:
+      const updatedScenes = updateEntityInArray([...state.scenes], action.payload.updatedScene, action.payload.previousSceneKey)
+      return { ...state, scenes: updatedScenes, loading: false, loadingError: false }
+    case SCENE_CHILD_REMOVED:
+      const { sceneId } = action.payload.removedScene
+      const removedScenes = [...state.scenes].filter((scene) => scene.id !== sceneId)
+      return { ...state, scenes: removedScenes, loading: false, loadingError: false }
     default:
       return state
   }

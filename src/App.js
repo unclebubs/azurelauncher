@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import store from './store/Store'
 import PlanList from './components/PlanList'
+import SceneList from './components/SceneList'
 import './App.css'
 import { IoIosCloseCircleOutline } from '@react-icons/all-files/io/IoIosCloseCircleOutline'
 import DynamicPortal from './portal/DynamicPortal'
@@ -19,6 +20,7 @@ function App ({ appContainer }) {
   const [userId, setUserId] = useState()
   const [planId, setPlanId] = useState()
   const [tourId, setTourId] = useState()
+  const [sceneId, setSceneId] = useState()
 
   useEffect(() => {
     if (vrActive) {
@@ -69,6 +71,9 @@ function App ({ appContainer }) {
     params.showPlanDescription = appContainer.getAttribute('data-showPlanDescription') === 'true'
     params.showTourTitle = appContainer.getAttribute('data-showTourTitle') === 'true'
     params.showTourDescription = appContainer.getAttribute('data-showTourDescription') === 'true'
+    params.showScenes = appContainer.getAttribute('data-showScenes') === 'true'
+    params.showSceneTitle = appContainer.getAttribute('data-showSceneTitle') === 'true'
+    params.showSceneDescription = appContainer.getAttribute('data-showSceneDescription') === 'true'
 
     params.preview = appContainer.getAttribute('data-preview') === 'true'
 
@@ -89,16 +94,34 @@ function App ({ appContainer }) {
     setUserId(userId)
     setPlanId(planId)
     setTourId(tourId)
+    setSceneId(null)
     setTourListActive(false)
     setVRActive(true)
     setVRButtonActive(true)
   }
 
+  const handleSceneClick = ({ userId, planId, tourId, sceneId }) => {
+    setUserId(userId)
+    setPlanId(planId)
+    setTourId(tourId)
+    // setSceneId(sceneId)
+    setTourListActive(false)
+    setVRActive(true)
+    setVRButtonActive(true)
+  }
+
+  const parameters = params()
+  const showScenes = parameters.tourId && parameters.showScenes
+  let url = `https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourId}`
+  url += sceneId ? `&sceneId=${sceneId}` : ''
+  console.log('url is ', url)
   return (
     <Provider store={store}>
       <Container style={styles.container} ref={containerRef} fluid key='container'>
         <Fade in={tourListActive} mountOnEnter>
-          <PlanList {...params()} handlePlanClick={handlePlanClick} />
+          {showScenes
+            ? <SceneList {...parameters} handleSceneClick={handleSceneClick} />
+            : <PlanList {...parameters} handlePlanClick={handlePlanClick} />}
         </Fade>
         <DynamicPortal container={window.document.body} containerId='portal'>
           <div style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
@@ -121,7 +144,7 @@ function App ({ appContainer }) {
             </div>
             <iframe
               ref={frame}
-              src={`https://app.azure-vr.com/index.html?userId=${userId}&planId=${planId}&tourId=${tourId}`}
+              src={url}
               style={styles.frame}
               id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
             />
