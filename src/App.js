@@ -2,9 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Fade } from 'react-bootstrap'
-import { Provider } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
-import store from './store/Store'
 import PlanList from './components/PlanList'
 import SceneList from './components/SceneList'
 import './App.css'
@@ -116,39 +114,37 @@ function App ({ appContainer }) {
   url += sceneId ? `&sceneId=${sceneId}` : ''
   console.log('url is ', url)
   return (
-    <Provider store={store}>
-      <Container style={styles.container} ref={containerRef} fluid key='container'>
-        <Fade in={tourListActive} mountOnEnter>
-          {showScenes
-            ? <SceneList {...parameters} handleSceneClick={handleSceneClick} />
-            : <PlanList {...parameters} handlePlanClick={handlePlanClick} />}
-        </Fade>
-        <DynamicPortal container={window.document.body} containerId='portal'>
-          <div style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
-            <div style={vrButtonActive ? styles.buttonContainerOn : styles.buttonContainerOff}>
-              <IoIosCloseCircleOutline
-                onClick={() => {
-                  setVRActive(false)
-                  setVRButtonActive(false)
-                  setTourListActive(true)
-                }}
-                onTouchEnd={() => {
-                  setVRActive(false)
-                  setVRButtonActive(false)
-                  setTourListActive(true)
-                }} color='rgba(255, 255, 255)' style={{ cursor: 'pointer', backgroundColor: 'black', borderRadius: 36 }} size={36}
-              />
-            </div>
-            <iframe
-              ref={frame}
-              src={url}
-              style={styles.frame}
-              id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
+    <Container style={styles.container} ref={containerRef} fluid key='container'>
+      <Fade in={tourListActive} mountOnEnter>
+        {showScenes
+          ? <SceneList {...parameters} handleSceneClick={handleSceneClick} />
+          : <PlanList {...parameters} handlePlanClick={handlePlanClick} />}
+      </Fade>
+      <DynamicPortal container={window.document.body} containerId='portal'>
+        <div style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
+          <div style={vrButtonActive ? styles.buttonContainerOn : styles.buttonContainerOff}>
+            <IoIosCloseCircleOutline
+              onClick={() => {
+                setVRActive(false)
+                setVRButtonActive(false)
+                setTourListActive(true)
+              }}
+              onTouchEnd={() => {
+                setVRActive(false)
+                setVRButtonActive(false)
+                setTourListActive(true)
+              }} color='rgba(255, 255, 255)' style={{ cursor: 'pointer', backgroundColor: 'black', borderRadius: 36 }} size={36}
             />
           </div>
-        </DynamicPortal>
-      </Container>
-    </Provider>
+          <iframe
+            ref={frame}
+            src={url}
+            style={styles.frame}
+            id='tour-MWUalNu0gI7lIRHTYz7' referrerpolicy='origin' scrolling='no'
+          />
+        </div>
+      </DynamicPortal>
+    </Container>
   )
 }
 
