@@ -126,8 +126,7 @@ function App ({ appContainer }) {
         <DynamicPortal container={window.document.body} containerId='portal'>
           <div style={vrActive ? styles.frameContainerStylesOn : styles.frameContainerStylesOff}>
             <div style={vrButtonActive ? styles.buttonContainerOn : styles.buttonContainerOff}>
-              <button
-                style={styles.button}
+              <IoIosCloseCircleOutline
                 onClick={() => {
                   setVRActive(false)
                   setVRButtonActive(false)
@@ -137,10 +136,8 @@ function App ({ appContainer }) {
                   setVRActive(false)
                   setVRButtonActive(false)
                   setTourListActive(true)
-                }}
-              >
-                <IoIosCloseCircleOutline color='rgba(255, 255, 255)' size={36} />
-              </button>
+                }} color='rgba(255, 255, 255)' style={{ cursor: 'pointer', backgroundColor: 'black', borderRadius: 36 }} size={36}
+              />
             </div>
             <iframe
               ref={frame}
@@ -171,8 +168,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'opacity 0.3s ease-in',
-    zIndex: '999999',
-    backgroundColor: 'black'
+    zIndex: '999999'
   },
   frameContainerStylesOff: {
     height: 0,
@@ -185,8 +181,7 @@ const styles = {
     alignitems: 'center',
     justifyContent: 'center',
     transition: 'all  0.3s ease-out',
-    zIndex: '999999',
-    backgroundColor: 'black'
+    zIndex: '999999'
   },
 
   buttonContainerOn: {

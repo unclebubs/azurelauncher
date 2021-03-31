@@ -137,6 +137,6 @@ const dispatchSceneRemoved = (dispatch, scene) => {
   // console.log('In dispatchEntityRemoved')
   dispatch({
     type: SCENE_CHILD_REMOVED,
-    payload: { removedScene: scene }
+    payload: { removedScene: scene.id }
   })
 }

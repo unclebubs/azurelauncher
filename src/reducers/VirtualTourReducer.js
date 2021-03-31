@@ -102,7 +102,7 @@ export default (state = INITIAL_STATE, action) => {
       const updatedScenes = updateEntityInArray([...state.scenes], action.payload.updatedScene, action.payload.previousSceneKey)
       return { ...state, scenes: updatedScenes, loading: false, loadingError: false }
     case SCENE_CHILD_REMOVED:
-      const { sceneId } = action.payload.removedScene
+      const sceneId = action.payload.removedScene
       const removedScenes = [...state.scenes].filter((scene) => scene.id !== sceneId)
       return { ...state, scenes: removedScenes, loading: false, loadingError: false }
     default:
